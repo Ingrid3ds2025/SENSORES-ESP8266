@@ -1,7 +1,9 @@
+// screens/TelaInicial.js
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image } from 'react-native';
 import { db } from './firebaseConfig';
 import { ref, onValue } from "firebase/database";
+import { getAuth, signOut } from 'firebase/auth';
 
 class TelaInicial extends Component {
   constructor(props) {
@@ -29,17 +31,22 @@ class TelaInicial extends Component {
       }
     });
 
-    //Ligação para chuva
+    // Listener para chuva (corrigido)
     onValue(ref(db, 'sensores/chuva'), (snapshot) => {
-      if(snapshot.exists()){
-        this.state({chuva: snapshot.val()});
+      if (snapshot.exists()) {
+        this.setState({ chuva: snapshot.val() });
       }
-    })
+    });
   }
-
 
   toggleMenu = () => {
     this.setState({ menuAberto: !this.state.menuAberto });
+  };
+
+  handleLogout = async () => {
+    const auth = getAuth();
+    await signOut(auth);
+    this.props.navigation.replace('Login');
   };
 
   render() {
@@ -48,7 +55,6 @@ class TelaInicial extends Component {
 
     return (
       <View style={styles.container}>
-        {/* Conteúdo principal */}
         <View style={styles.conteudo1}>
           <TouchableOpacity 
             onPress={this.toggleMenu}
@@ -57,31 +63,29 @@ class TelaInicial extends Component {
             <Text style={styles.iconeMenu}>☰</Text>
           </TouchableOpacity>
           
-          {/* Texto da temperatura */}
           <View style={styles.containerTemperatura}>
             <Text style={styles.textoTempo}>
               Temperatura: {temperatura}°C 
             </Text>
-             <Text style={styles.textoTempo}>
-               {chuva ? "🌧️ Chovendo" : "☀️ Sem chuva"}
+            <Text style={styles.textoTempo}>
+              {chuva ? "🌧️ Chovendo" : "☀️ Sem chuva"}
             </Text>
           </View>
         </View>
 
         <View style={styles.conteudo2}>
-          <Text style={ styles.textoUmidade }>Umidade do solo</Text>
-          <Text style={ styles.porcentagemUmidade }>{umidade}%</Text>
-          <Text style={ styles.textoIrrigacao }>Irrigação realizada 0 vezes em 2 dias.</Text>
+          <Text style={styles.textoUmidade}>Umidade do solo</Text>
+          <Text style={styles.porcentagemUmidade}>{umidade}%</Text>
+          <Text style={styles.textoIrrigacao}>Irrigação realizada 0 vezes em 2 dias.</Text>
         </View>
 
         <View style={styles.conteudo3}>
           <Image 
             source={require('../../../imagens/planta.png')}
-            style={{ width: 300, height: 300}}
+            style={{ width: 300, height: 300 }}
           />
         </View>
 
-        {/* Menu em tela cheia */}
         {this.state.menuAberto && (
           <View style={[styles.menuFullscreen, { width, height }]}>
             <TouchableOpacity 
@@ -92,24 +96,25 @@ class TelaInicial extends Component {
             </TouchableOpacity>
             
             <View style={styles.menuContent}>
-           
-
               <TouchableOpacity 
-                  style={styles.menuItemButton} 
-                  onPress={() => {
-                    this.toggleMenu(); 
-                    this.props.navigation.navigate('PerfilUsuario');}}>
+                style={styles.menuItemButton} 
+                onPress={() => {
+                  this.toggleMenu(); 
+                  this.props.navigation.navigate('PerfilUsuario');
+                }}
+              >
                 <Text style={styles.menuItem}>Perfil</Text>
               </TouchableOpacity>
 
               <TouchableOpacity 
-                  style={styles.menuItemButton} 
-                  onPress={() => {
-                    this.toggleMenu(); 
-                    this.props.navigation.navigate('RelatorioGeral');}}>
+                style={styles.menuItemButton} 
+                onPress={() => {
+                  this.toggleMenu(); 
+                  this.props.navigation.navigate('RelatorioGeral');
+                }}
+              >
                 <Text style={styles.menuItem}>Relatório Geral</Text>
               </TouchableOpacity>
-             
             </View>
           </View>
         )}
@@ -119,31 +124,28 @@ class TelaInicial extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1,
-    backgroundColor: 'black', 
-    padding:10 },
-
-  conteudo1: 
-  { flex: 1, 
+  container: {
+     flex: 1, 
+     backgroundColor: 'black', 
+     padding: 10 
+  },
+  conteudo1: { 
+    flex: 1, 
     width: '100%', 
     alignItems: 'flex-end' 
   },
-
   iconeMenu: { 
     fontSize: 50, 
     color: 'green', 
     marginRight: 20, 
     marginTop: 10 
   },
-
   containerTemperatura: { 
-    width: '100%', 
+    width: '100%',
     justifyContent: 'center', 
     alignItems: 'center', 
     marginTop: 20 
   },
-
   textoTempo: { 
     fontSize: 20, 
     color: 'white' 
@@ -154,54 +156,45 @@ const styles = StyleSheet.create({
     justifyContent: 'center', 
     alignItems: 'center' 
   },
-
   textoUmidade: { 
     fontSize: 25, 
     color: 'white', 
     fontWeight: '900' 
   },
-
   porcentagemUmidade: { 
     fontSize: 100, 
     color: 'white', 
-    fontWeight: '900' 
-  },
-
+    fontWeight: '900'
+   },
   textoIrrigacao: { 
     fontSize: 15, 
-    color: 'white'
-   },
-
+    color: 'white' 
+  },
   conteudo3: { 
     flex: 1, 
-    justifyContent: 'center',
-     alignItems: 'center', 
-     marginTop: 40 
-    },
-
-  menuFullscreen: {
-     position: 'absolute',
-      backgroundColor: 'rgba(0, 0, 0, 0.9)', 
-      zIndex: 100, 
-      justifyContent: 'center',
-       alignItems: 'center' 
-      },
-
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    marginTop: 40 
+  },
+  menuFullscreen: { 
+    position: 'absolute', 
+    backgroundColor: 'rgba(0, 0, 0, 0.9)', 
+    zIndex: 100,
+    justifyContent: 'center', 
+    alignItems: 'center' 
+  },
   botaoFecharMenu: { 
     position: 'absolute', 
-    top: 50, 
-    right: 20 
+    top: 50, right: 20 
   },
-
   menuContent: { 
     flex: 1, 
     justifyContent: 'center', 
     alignItems: 'center' 
   },
-
   menuItem: { 
     color: 'white', 
-    fontSize: 30, 
+    fontSize: 30,
     marginVertical: 20 
   }
 });

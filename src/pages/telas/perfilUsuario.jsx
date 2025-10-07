@@ -1,23 +1,15 @@
 import React, { Component } from 'react';
-import {
-  View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Alert,} from 'react-native';
-import { getAuth, updatePassword } from 'firebase/auth';
-import { initializeApp } from "firebase/app";
-import { getDatabase } from "firebase/database";
- 
+import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
+import { getAuth, signOut } from 'firebase/auth';
 
 class PerfilUsuario extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      nome: '',
-      email: '',
-    };
-  }
+  state = {
+    nome: '',
+    email: '',
+  };
 
   componentDidMount() {
-    const auth = getAuth();
-    const user = auth.currentUser;
+    const user = getAuth().currentUser;
 
     if (user) {
       this.setState({
@@ -26,6 +18,21 @@ class PerfilUsuario extends Component {
       });
     }
   }
+
+  logout = () => {
+    const auth = getAuth();
+
+    signOut(auth)
+      .then(() => {
+        this.props.navigation.reset({
+          index: 0,
+          routes: [{ name: 'SignIn' }], 
+        });
+      })
+      .catch((error) => {
+        Alert.alert('Erro ao sair', error.message);
+      });
+  };
 
   render() {
     const { nome, email } = this.state;
@@ -37,21 +44,17 @@ class PerfilUsuario extends Component {
             source={require('../../../imagens/pngwing.com.png')}
             style={{ width: 200, height: 200 }}
           />
-
           <Text style={styles.titulo}>{nome}</Text>
           <Text style={styles.subtitulo}>{email}</Text>
         </View>
 
-        <View>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.textButton}>Sair</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity style={styles.button} onPress={this.logout}>
+          <Text style={styles.textButton}>Sair</Text>
+        </TouchableOpacity>
       </View>
     );
   }
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -63,7 +66,6 @@ const styles = StyleSheet.create({
   conteudo: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'black',
     marginTop: 70,
   },
   titulo: {
@@ -83,8 +85,13 @@ const styles = StyleSheet.create({
     height: 40,
     width: 200,
     borderRadius: 10,
-  }
-
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textButton: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
 });
 
 export default PerfilUsuario;
