@@ -14,6 +14,11 @@ export default function Routes() {
   return (
     <Stack.Navigator initialRouteName="AuthLoading">
 
+       <Stack.Screen
+        name="Welcome"
+        component={Welcome}
+        options={{ headerShown: false }}
+      />
       {/* Tela intermediária para verificar se o usuário está logado */}
       <Stack.Screen
         name="AuthLoading"
@@ -21,11 +26,7 @@ export default function Routes() {
         options={{ headerShown: false }}
       />
 
-      <Stack.Screen
-        name="Welcome"
-        component={Welcome}
-        options={{ headerShown: false }}
-      />
+     
 
       <Stack.Screen
         name="TelaInicial"
