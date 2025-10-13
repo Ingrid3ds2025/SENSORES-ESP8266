@@ -10,9 +10,9 @@ export default function AuthLoading({ navigation }) {
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        navigation.replace('Welcome');
+        navigation.replace('TelaInicial');
       } else {
-        navigation.replace('TelaInicial');  // ou SignIn, se preferir
+        navigation.replace('Welcome');  // ou SignIn, se preferir
       }
       setLoading(false); // só pra garantir que acabou o loading
     });

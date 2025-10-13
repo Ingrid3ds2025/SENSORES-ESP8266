@@ -4,8 +4,7 @@ import * as Animatable from 'react-native-animatable';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../pages/telas/firebaseConfig'; // ajuste o caminho conforme seu projeto
-
+import { auth } from '../../pages/telas/firebaseConfig'; 
 export default function SignIn() {
   const navigation = useNavigation();
 
