@@ -5,7 +5,12 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../pages/telas/firebaseConfig'; 
+import * as Google from 'expo-auth-session/providers/google';
+import * as WebBrowser from 'expo-web-browser';
+
 export default function SignIn() {
+
+  WebBrowser.maybeCompleteAuthSession();
   const navigation = useNavigation();
 
   const [email, setEmail] = useState('');
@@ -31,6 +36,20 @@ export default function SignIn() {
   function Cadastrar() {
     navigation.navigate('CadastroUsuario');
   }
+
+   const [request, response, promptAsync] = Google.useAuthRequest({
+    // Use o Web Client ID do Firebase (crie um app Web no Firebase Console)
+    clientId: '880833389958-ips3dn4m3roukmhrfks7mqf77h865nap.apps.googleusercontent.com',
+  });
+
+  React.useEffect(() => {
+    if (response?.type === 'success') {
+      // Login deu certo → vai para a próxima tela
+      navigation.replace('TelaInicial'); // ou navigation.navigate('Home')
+    } else if (response?.type === 'error') {
+      Alert.alert('Erro', 'Falha no login.');
+    }
+  }, [response, navigation]);
 
   return (
     <View style={styles.container}>
@@ -70,13 +89,12 @@ export default function SignIn() {
           <Text style={styles.textButton}>Acessar</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.buttonGoogle} onPress={Acessar}>
-          <Text style={styles.textButtonGoogle}>
-            <Image source={require('../../../imagens/icon-google.png')}
-              style={ styles.iconGoogle }
-            />
-            Acesse com o Google
-          </Text>
+        <TouchableOpacity style={styles.buttonGoogle} onPress={() => promptAsync()} disabled={!request}>
+          <Image
+            source={require('../../../imagens/icon-google.png')}
+            style={styles.iconGoogle}
+          />
+          <Text style={styles.textButtonGoogle}> {request ? 'Entrar com o Google' : 'Carregando...'} </Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.buttonRegistrar} onPress={Cadastrar}>
@@ -161,17 +179,37 @@ const styles = StyleSheet.create({
   },
 
   buttonGoogle: {
-     backgroundColor: '#fff',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 4,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginTop: 16,
+    width: '100%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
 
   iconGoogle: {
-    width: 30,
-    height: 30,
-   
+    width: 20,
+    height: 20,
+    marginRight: 10,
+    resizeMode: 'contain',
   },
+
   textButtonGoogle: {
-    color: '#000',
+    fontSize: 16,
     fontWeight: 'bold',
-  }
+    color: '#000',
+  },
+
+
 
 });
