@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "880833389958",
+    "firebase_url": "https://sensoresesp-6f166-default-rtdb.firebaseio.com",
+    "project_id": "sensoresesp-6f166",
+    "storage_bucket": "sensoresesp-6f166.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:880833389958:android:cc1a28c40c07bedf93f807",
+        "android_client_info": {
+          "package_name": "com.devingrid.tccingrid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "880833389958-u5jh0pknvt71g7ng00osg0l7ad5gbpbs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_kmWFwHXF1GVc2a_LzPL9Vz8Ctq4QCtc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "880833389958-u5jh0pknvt71g7ng00osg0l7ad5gbpbs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "880833389958-ltcpnm831nu5qprffd6qqubata92gq26.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tcc-ingrid.ios"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

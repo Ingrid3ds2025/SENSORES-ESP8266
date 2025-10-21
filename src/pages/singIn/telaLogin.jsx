@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, Image } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
@@ -68,6 +68,15 @@ export default function SignIn() {
 
         <TouchableOpacity style={styles.button} onPress={Acessar}>
           <Text style={styles.textButton}>Acessar</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.buttonGoogle} onPress={Acessar}>
+          <Text style={styles.textButtonGoogle}>
+            <Image source={require('../../../imagens/icon-google.png')}
+              style={ styles.iconGoogle }
+            />
+            Acesse com o Google
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.buttonRegistrar} onPress={Cadastrar}>
@@ -150,4 +159,19 @@ const styles = StyleSheet.create({
     color: 'green',
     marginLeft: 5,
   },
+
+  buttonGoogle: {
+     backgroundColor: '#fff',
+  },
+
+  iconGoogle: {
+    width: 30,
+    height: 30,
+   
+  },
+  textButtonGoogle: {
+    color: '#000',
+    fontWeight: 'bold',
+  }
+
 });
