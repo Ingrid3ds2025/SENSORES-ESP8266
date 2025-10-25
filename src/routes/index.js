@@ -7,6 +7,7 @@ import Welcome from '../pages/welcome/bemVindo';
 import SingIn from '../pages/singIn/telaLogin';
 import CadastroUsuario from '../pages/singIn/telaCadastro';
 import AuthLoading from '../routes/AuthLoading';  // Importante
+import ConfigSensor from '../pages/telas/configSensor';
 
 const Stack = createNativeStackNavigator();
 
@@ -66,6 +67,18 @@ export default function Routes() {
         name="CadastroUsuario"
         component={CadastroUsuario}
         options={{ headerShown: false }}
+      />
+
+    
+      <Stack.Screen
+        name="ConfigSensor"
+        component={ConfigSensor}
+        options={{
+          title: 'ConfigSensor',
+          headerStyle: { backgroundColor: 'black' },
+          headerTintColor: 'white',
+          headerTitleStyle: { fontWeight: 'bold' },
+        }}
       />
     </Stack.Navigator>
   );
