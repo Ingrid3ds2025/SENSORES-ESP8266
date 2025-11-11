@@ -72,7 +72,7 @@ class TelaInicial extends Component {
     // 🟢 Interpretação correta dos sensores
     const soloTexto = umidadeSolo == 1 ? '🌵 Seco' : '💧 Úmido';
     const luzTexto = luz == 1 ? '🌞 Claro' : '🌙 Escuro';
-    const chuvaTexto = chuva == 1 ? '☀️ Sem chuva' : '';
+    const chuvaTexto = chuva == 1 ? '☀️ Sem chuva' : 'Chovendo';
 
     return (
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>

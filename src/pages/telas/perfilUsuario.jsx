@@ -133,7 +133,7 @@ export default function PerfilUsuario({ navigation }) {
 
   // 🧠 Interpretação correta dos sensores:
   const textoSolo = umidadeSolo === 1 ? 'Seco' : 'Úmido';
-  const textoChuva = chuva == 1 ? ' Sem chuva' : ' Chovendo';
+  const textoChuva = chuva == 1 ? 'Sem chuva ' : ' Chovendo';
   const textoLuz = luz === 1 ? 'Claro' : 'Escuro';
 
   return (

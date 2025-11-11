@@ -38,7 +38,7 @@ export default function ConfigSensor() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>🔧 Vincular Sensor</Text>
+      <Text style={styles.title}> Vincular Sensor</Text>
 
       <TextInput
         placeholder="Digite o nome do sensor (ex: usuario01)"
