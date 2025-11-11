@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Routes from './src/routes';
 import PerfilUsuario from './src/pages/telas/perfilUsuario';
+import TelaEsqueceuSenha from './src/pages/singIn/telaEsqueceuSenha';
 
 
 const Stack = createNativeStackNavigator(); 
@@ -13,12 +14,14 @@ export default function App() {
   return (
 
          
-             <NavigationContainer>
-               <StatusBar backgroundColor='#38A69D' barStyle='light-content'/>
+              <NavigationContainer>
+                <StatusBar backgroundColor='#38A69D' barStyle='light-content'/>
                <Routes/> 
-            </NavigationContainer>
-            //  <PerfilUsuario/>
+               
+             </NavigationContainer>
+            // //  <PerfilUsuario/>
           
+
           
   );
 }

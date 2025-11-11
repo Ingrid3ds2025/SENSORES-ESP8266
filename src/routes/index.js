@@ -8,6 +8,7 @@ import SingIn from '../pages/singIn/telaLogin';
 import CadastroUsuario from '../pages/singIn/telaCadastro';
 import AuthLoading from '../routes/AuthLoading';  // Importante
 import ConfigSensor from '../pages/telas/configSensor';
+import TelaEsqueceuSenha from '../pages/singIn/telaEsqueceuSenha';
 
 const Stack = createNativeStackNavigator();
 
@@ -68,6 +69,13 @@ export default function Routes() {
         component={CadastroUsuario}
         options={{ headerShown: false }}
       />
+
+      <Stack.Screen
+        name="EsqueceuSenha"
+        component={TelaEsqueceuSenha}
+        options={{ headerShown: false }}
+      />
+
 
     
       <Stack.Screen

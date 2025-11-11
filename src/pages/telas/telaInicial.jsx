@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Image, ActivityIndicator } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, TouchableOpacity, Dimensions, Image, ActivityIndicator, Alert } from 'react-native';
 import { db } from './firebaseConfig';
 import { ref, onValue } from 'firebase/database';
 import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
@@ -10,239 +10,178 @@ class TelaInicial extends Component {
     this.state = {
       menuAberto: false,
       temperatura: '--',
-      umidade: '--',
-      chuva: false,
+      umidadeAr: '--',
+      umidadeSolo: '--',
+      luz: '--',
+      chuva: '--',
       carregando: true,
     };
   }
 
   componentDidMount() {
     const auth = getAuth();
-
-    // Espera o login do usuário antes de ler o banco
     onAuthStateChanged(auth, (user) => {
       if (!user) {
-        console.log('Usuário não autenticado ainda');
         this.setState({ carregando: false });
         return;
       }
 
-      console.log('Usuário logado:', user.uid);
-
-      // Busca o deviceUID salvo na configuração do usuário
       const deviceUIDRef = ref(db, `usuarios/${user.uid}/config/deviceUID`);
       onValue(deviceUIDRef, (snapshot) => {
         if (snapshot.exists()) {
           const deviceUID = snapshot.val();
-          console.log('DeviceUID encontrado:', deviceUID);
-
-          // Agora escuta os sensores do NodeMCU
           const baseRef = ref(db, `usuarios/${deviceUID}`);
           onValue(baseRef, (snap) => {
             if (snap.exists()) {
               const data = snap.val();
-              console.log('Dados recebidos:', data);
               this.setState({
                 temperatura: data.temperatura ?? '--',
-                umidade: data.umidade ?? '--',
-                chuva: data.chuva ?? false,
+                umidadeAr: data.umidadeAr ?? '--',
+                umidadeSolo: data.umidadeSolo ?? '--',
+                luz: data.luz ?? '--',
+                chuva: data.chuva ?? '--',
                 carregando: false,
               });
-            } else {
-              console.log('Nenhum dado encontrado para este sensor.');
-              this.setState({ carregando: false });
-            }
+
+              // 🔔 Mostra alerta SOMENTE se o solo estiver SECO (1)
+              if (data.umidadeSolo === 1) {
+                Alert.alert("🌵 Solo seco detectado!", "Sua planta precisa de água 💧");
+              }
+            } else this.setState({ carregando: false });
           });
-        } else {
-          console.log('⚠️ Nenhum sensor configurado ainda.');
-          this.setState({ carregando: false });
-        }
+        } else this.setState({ carregando: false });
       });
     });
   }
 
-  toggleMenu = () => {
-    this.setState({ menuAberto: !this.state.menuAberto });
-  };
-
-  handleLogout = async () => {
-    const auth = getAuth();
-    await signOut(auth);
-    this.props.navigation.replace('Login');
-  };
+  toggleMenu = () => this.setState({ menuAberto: !this.state.menuAberto });
 
   render() {
     const { width } = Dimensions.get('window');
-    const { temperatura, umidade, chuva, menuAberto, carregando } = this.state;
+    const { temperatura, umidadeAr, umidadeSolo, luz, chuva, menuAberto, carregando } = this.state;
 
     if (carregando) {
       return (
-        <View style={styles.container}>
-          <ActivityIndicator size="large" color="green" />
-          <Text style={{ color: 'white', marginTop: 20 }}>Carregando dados...</Text>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#4CAF50" />
+          <Text style={styles.loadingText}>Carregando dados...</Text>
         </View>
       );
     }
 
-    return (
-      <View style={styles.container}>
-        <View style={styles.conteudo1}>
-          <TouchableOpacity onPress={this.toggleMenu} style={styles.botaoMenu}>
-            <Text style={styles.iconeMenu}>☰</Text>
-          </TouchableOpacity>
+    // 🟢 Interpretação correta dos sensores
+    const soloTexto = umidadeSolo == 1 ? '🌵 Seco' : '💧 Úmido';
+    const luzTexto = luz == 1 ? '🌞 Claro' : '🌙 Escuro';
+    const chuvaTexto = chuva == 1 ? '☀️ Sem chuva' : '';
 
-          <View style={styles.containerTemperatura}>
-            <Text style={styles.textoTempo}>Temperatura:{temperatura}°C</Text>
-            <Text style={styles.textoTempo}>{chuva ? '🌧️ Chovendo' : '☀️ Sem chuva'}</Text>
+    return (
+      <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={this.toggleMenu}>
+            <Text style={styles.menuIcon}>☰</Text>
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Monitor de Plantas 🌿</Text>
+        </View>
+
+        {/* Cards */}
+        <View style={styles.cardContainer}>
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}> Temperatura</Text>
+            <Text style={styles.cardValue}>{temperatura}°C</Text>
+          </View>
+
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}> Umidade do Ar</Text>
+            <Text style={styles.cardValue}>{umidadeAr}%</Text>
+          </View>
+
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}> Umidade do Solo</Text>
+            <Text style={[styles.cardValue, { color: umidadeSolo == 1 ? '#FF7043' : '#4CAF50' }]}>
+              {soloTexto}
+            </Text>
+          </View>
+
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}> Luminosidade</Text>
+            <Text style={[styles.cardValue, { color: luz == 1 ? '#9FA8DA' : '#FFEB3B' }]}>
+              {luzTexto}
+            </Text>
+          </View>
+
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}> Chuva</Text>
+            <Text style={[styles.cardValue, { color: chuva == 1 ? '#4FC3F7' : '#FDD835' }]}>
+              {chuvaTexto}
+            </Text>
           </View>
         </View>
 
-        <View style={styles.conteudo2}>
-          <Text style={styles.textoUmidade}>Umidade do solo</Text>
-          <Text style={styles.porcentagemUmidade}>{umidade}%</Text>
-          <Text style={styles.textoIrrigacao}>Irrigação realizada 0 vezes em 2 dias.</Text>
-        </View>
+        {/* Plant Image */}
+        <Image source={require('../../../imagens/planta.png')} style={styles.image} />
 
-        <View style={styles.conteudo3}>
-          <Image source={require('../../../imagens/planta.png')} style={{ width: 300, height: 300 }} />
-        </View>
-
+        {/* Menu lateral */}
         {menuAberto && (
-          <View style={[styles.menuFullscreen, { width }]}>
-            <TouchableOpacity onPress={this.toggleMenu} style={styles.botaoFecharMenu}>
-              <Text style={styles.iconeMenu}>✕</Text>
+          <View style={[styles.menuOverlay, { width }]}>
+            <TouchableOpacity onPress={this.toggleMenu} style={styles.closeButton}>
+              <Text style={styles.closeIcon}>✕</Text>
             </TouchableOpacity>
 
-            <View style={styles.menuContent}>
+            <View style={styles.menuItems}>
               <TouchableOpacity onPress={() => this.props.navigation.navigate('PerfilUsuario')}>
-                <Text style={styles.menuItem}>Perfil</Text>
+                <Text style={styles.menuItem}> Perfil</Text>
               </TouchableOpacity>
-
               <TouchableOpacity onPress={() => this.props.navigation.navigate('RelatorioGeral')}>
-                <Text style={styles.menuItem}>Relatório Geral</Text>
+                <Text style={styles.menuItem}> Relatório Geral</Text>
               </TouchableOpacity>
-
               <TouchableOpacity onPress={() => this.props.navigation.navigate('ConfigSensor')}>
-                <Text style={styles.menuItem}>Configurar Sensor</Text>
+                <Text style={styles.menuItem}> Configurar Sensor</Text>
               </TouchableOpacity>
             </View>
           </View>
         )}
-      </View>
+      </ScrollView>
     );
   }
 }
 
+// 🎨 Estilos
 const styles = StyleSheet.create({
-  container: 
-    { flex: 1,
-      backgroundColor: 'black', 
-      padding: 10, 
-      justifyContent: 'center', 
-      alignItems: 'center' 
-    },
-
-  conteudo1: { 
-    flex: 1, 
-    width: '100%', 
-    alignItems: 'flex-end' 
+  container: { flex: 1, backgroundColor: '#0d0d0d', paddingTop: 40 },
+  contentContainer: { alignItems: 'center' },
+  header: {
+    width: '100%', flexDirection: 'row', alignItems: 'center',
+    justifyContent: 'space-between', paddingHorizontal: 20, marginBottom: 10,
   },
-
-  iconeMenu: { 
-    fontSize: 50, 
-    color: 'green', 
-    marginRight: 20, 
-    marginTop: 10 
+  menuIcon: { fontSize: 38, color: '#4CAF50' },
+  headerTitle: { color: '#E8F5E9', fontSize: 20, fontWeight: '700' },
+  cardContainer: {
+    width: '90%', marginTop: 20, flexWrap: 'wrap',
+    flexDirection: 'row', justifyContent: 'space-between',
   },
-
-  containerTemperatura: { 
-    width: '100%', 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    marginTop: 20
+  card: {
+    backgroundColor: '#1B1B1B', borderRadius: 15, width: '48%',
+    paddingVertical: 18, paddingHorizontal: 10, marginVertical: 8,
+    alignItems: 'center', borderWidth: 1, borderColor: '#2E7D32',
   },
- 
-  textoTempo: { 
-    fontSize: 20, 
-    color: 'white' 
+  cardTitle: { color: '#A5D6A7', fontSize: 15, fontWeight: '600' },
+  cardValue: { color: '#FFFFFF', fontSize: 24, fontWeight: 'bold', marginTop: 5 },
+  image: { width: 220, height: 220, marginTop: 20, opacity: 0.9 },
+  menuOverlay: {
+    position: 'absolute', top: 0, bottom: 0, left: 0,
+    backgroundColor: 'rgba(0,0,0,0.96)', zIndex: 100,
+    alignItems: 'center', justifyContent: 'center',
   },
-
-  conteudo2: { 
-    flex: 1, 
-    justifyContent: 'center', 
-    alignItems: 'center' 
+  closeButton: { position: 'absolute', top: 50, right: 30 },
+  closeIcon: { fontSize: 36, color: '#81C784' },
+  menuItems: { alignItems: 'center', gap: 30 },
+  menuItem: { color: '#FFFFFF', fontSize: 22, fontWeight: '600' },
+  loadingContainer: {
+    flex: 1, backgroundColor: '#0d0d0d',
+    justifyContent: 'center', alignItems: 'center',
   },
-
-  textoUmidade: { 
-    fontSize: 25, 
-    color: 'white', 
-    fontWeight: '900' 
-  },
-
-  porcentagemUmidade: { 
-    fontSize: 100, 
-    color: 'white', 
-    fontWeight: '900' 
-  },
-
-  textoIrrigacao:  { 
-    fontSize: 15, 
-    color: 'white' 
-  },
-  
-  conteudo3: {
-     flex: 1, 
-     justifyContent: 'center', 
-     alignItems: 'center', 
-     marginTop: 40 
-    },
-      
-  menuFullscreen: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.95)',
-    zIndex: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-
-  botaoFecharMenu: {
-    position: 'absolute',
-    top: 50,
-    right: 25,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 25,
-    padding: 10,
-  },
-
-  menuContent: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 20, // (ou use marginVertical em cada item)
-  },
-
-  menuItemButton: {
-    backgroundColor: 'rgba(0, 128, 0, 0.2)',
-    paddingVertical: 12,
-    paddingHorizontal: 30,
-    borderRadius: 12,
-    width: '80%',
-    alignItems: 'center',
-    marginVertical: 8,
-  },
-
-  menuItem: {
-    color: 'white',
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-
+  loadingText: { color: '#E8F5E9', marginTop: 10, fontSize: 16 },
 });
 
 export default TelaInicial;
