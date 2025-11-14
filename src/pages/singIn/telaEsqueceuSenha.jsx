@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  StyleSheet
+} from 'react-native';
+import * as Animatable from 'react-native-animatable';
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 
 export default function TelaEsqueceuSenha({ navigation }) {
@@ -18,7 +26,7 @@ export default function TelaEsqueceuSenha({ navigation }) {
         '📩 Email enviado!',
         'Verifique sua caixa de entrada e siga as instruções para redefinir sua senha.'
       );
-      navigation.navigate('SignIn'); // volta pra tela de login
+      navigation.navigate('SignIn');
     } catch (error) {
       console.log(error);
       Alert.alert('Erro', 'Não foi possível enviar o email. Verifique o endereço digitado.');
@@ -27,27 +35,42 @@ export default function TelaEsqueceuSenha({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titulo}> Esqueceu sua senha?</Text>
-      <Text style={styles.subtitulo}>
-        Digite seu e-mail para receber um link de redefinição.
-      </Text>
+      <Animatable.View
+        animation="fadeInLeft"
+        delay={500}
+        style={styles.containerHeader}
+      >
+        <Text style={styles.tituloHeader}>Esqueceu a senha?</Text>
+      </Animatable.View>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Digite seu e-mail"
-        placeholderTextColor="#aaa"
-        keyboardType="email-address"
-        value={email}
-        onChangeText={setEmail}
-      />
+      <Animatable.View
+        animation="fadeInUp"
+        delay={500}
+        style={styles.containerForm}
+      >
+        <Text style={styles.subtitulo}>
+          Digite seu e-mail para receber um link de redefinição.
+        </Text>
 
-      <TouchableOpacity style={styles.botao} onPress={enviarEmailRecuperacao}>
-        <Text style={styles.textoBotao}>Enviar link</Text>
-      </TouchableOpacity>
+        <Text style={styles.label}>Email</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Digite seu e-mail"
+          placeholderTextColor="#aaa"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          value={email}
+          onChangeText={setEmail}
+        />
 
-      <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
-        <Text style={styles.voltar}>Voltar ao login</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.botao} onPress={enviarEmailRecuperacao}>
+          <Text style={styles.textoBotao}>Enviar link</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
+          <Text style={styles.voltar}>Voltar ao login</Text>
+        </TouchableOpacity>
+      </Animatable.View>
     </View>
   );
 }
@@ -55,36 +78,57 @@ export default function TelaEsqueceuSenha({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
+    backgroundColor: '#8fbc8f',
   },
-  titulo: {
-    color: 'white',
+  containerHeader: {
+    marginTop: '15%',
+    marginBottom: '8%',
+    paddingStart: '5%',
+  },
+  tituloHeader: {
+    color: '#fff',
     fontSize: 26,
     fontWeight: 'bold',
-    marginBottom: 10,
+  },
+  containerForm: {
+    flex: 1,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    paddingHorizontal: '5%',
+    paddingTop: 20,
+    alignItems: 'center',
   },
   subtitulo: {
-    color: '#ccc',
+    color: '#555',
     textAlign: 'center',
-    marginBottom: 25,
+    marginBottom: 20,
+    fontSize: 16,
+  },
+  label: {
+    width: '100%',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    marginTop: 10,
   },
   input: {
-    backgroundColor: '#1c1c1c',
-    color: 'white',
+    backgroundColor: '#f5f5f5',
+    color: '#000',
     borderRadius: 8,
     width: '100%',
     padding: 12,
     marginBottom: 15,
+    borderWidth: 1,
+    borderColor: '#ccc',
   },
   botao: {
-    backgroundColor: 'green',
+    backgroundColor: '#8fbc8f',
     borderRadius: 8,
     width: '100%',
     padding: 12,
     alignItems: 'center',
+    marginTop: 10,
   },
   textoBotao: {
     color: 'white',

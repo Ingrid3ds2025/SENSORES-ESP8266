@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, Alert, StyleSheet } from 'react-native';
+import * as Animatable from 'react-native-animatable';
 import { getAuth } from 'firebase/auth';
 import { ref, set } from 'firebase/database';
-import { db } from './firebaseConfig'; // 🔥 Certifique-se de que o caminho está correto
+import { db } from './firebaseConfig';
 
 export default function ConfigSensor() {
   const [deviceUID, setDeviceUID] = useState('');
@@ -22,72 +23,95 @@ export default function ConfigSensor() {
         return;
       }
 
-      console.log('UID do usuário:', user.uid);
-      console.log('Salvando deviceUID:', deviceUID);
-
-      // Salva o nome do sensor vinculado ao usuário
       await set(ref(db, `usuarios/${user.uid}/config/deviceUID`), deviceUID.trim());
 
-      Alert.alert('✅ Sucesso', `Sensor "${deviceUID}" vinculado com sucesso!`);
-      setDeviceUID(''); // limpa o campo
+      Alert.alert('Sucesso', `Sensor "${deviceUID}" vinculado com sucesso!`);
+      setDeviceUID('');
     } catch (error) {
-      console.error('Erro ao salvar deviceUID:', error);
-      Alert.alert('❌ Erro', error.message);
+      Alert.alert('Erro', error.message);
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}> Vincular Sensor</Text>
+      <Animatable.View animation="fadeInLeft" delay={500} style={styles.header}>
+        <Text style={styles.titleHeader}>Vincular Sensor</Text>
+      </Animatable.View>
 
-      <TextInput
-        placeholder="Digite o nome do sensor (ex: usuario01)"
-        placeholderTextColor="#aaa"
-        style={styles.input}
-        value={deviceUID}
-        onChangeText={setDeviceUID}
-      />
+      <Animatable.View animation="fadeInUp" delay={500} style={styles.formContainer}>
+        <Text style={styles.label}>Nome do Sensor</Text>
 
-      <TouchableOpacity style={styles.button} onPress={handleVincular}>
-        <Text style={styles.textButton}>Salvar</Text>
-      </TouchableOpacity>
+        <TextInput
+          placeholder="ex: planta01"
+          placeholderTextColor="#777"
+          style={styles.input}
+          value={deviceUID}
+          onChangeText={setDeviceUID}
+          autoCapitalize="none"
+        />
+
+        <TouchableOpacity style={styles.button} onPress={handleVincular}>
+          <Text style={styles.textButton}>Salvar</Text>
+        </TouchableOpacity>
+      </Animatable.View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  container: { 
+    flex: 1, 
+    backgroundColor: '#8fbc8f' 
+  },
+
+  header: { 
+    marginTop: '15%',
+    marginBottom: '8%', 
+    paddingStart: '5%' 
+  },
+
+  titleHeader: { 
+    color: '#fff',
+    fontSize: 28, 
+    fontWeight: 'bold' 
+  },
+
+  formContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'black',
-    padding: 20,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    paddingHorizontal: '5%',
+    paddingTop: 30,
   },
-  title: {
-    color: 'white',
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 30,
+
+  label: { 
+    fontSize: 20, 
+    fontWeight: 'bold', 
+    marginBottom: 10 
   },
+
   input: {
+    backgroundColor: '#f5f5f5',
+    borderRadius: 8,
     borderWidth: 1,
-    borderColor: 'green',
-    color: 'white',
-    width: '80%',
-    marginBottom: 20,
-    padding: 10,
-    borderRadius: 8,
-  },
-  button: {
-    backgroundColor: 'green',
-    padding: 15,
-    borderRadius: 8,
-    width: '80%',
-    alignItems: 'center',
-  },
-  textButton: {
-    color: 'white',
-    fontWeight: 'bold',
+    borderColor: '#ccc',
+    padding: 12,
     fontSize: 16,
+    marginBottom: 20,
+  },
+
+  button: {
+    backgroundColor: '#8fbc8f',
+    borderRadius: 8,
+    paddingVertical: 12,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+
+  textButton: { 
+    color: '#fff', 
+    fontSize: 18, 
+    fontWeight: 'bold' 
   },
 });

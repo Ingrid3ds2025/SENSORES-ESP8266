@@ -97,7 +97,6 @@ export default function SignIn() {
           </Text>
         </TouchableOpacity>
 
-        {/* Rodapé - cadastro e recuperação de senha */}
         <View style={styles.footerContainer}>
           <TouchableOpacity onPress={Cadastrar} style={styles.footerButton}>
             <Text style={styles.textRegistrar}>Não possui uma conta?</Text>
@@ -115,18 +114,18 @@ export default function SignIn() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#8fbc8f',
+     flex: 1, 
+     backgroundColor: '#8fbc8f' 
+    },
+  containerHeader: { 
+    marginTop: '15%', 
+    marginBottom: '8%', 
+    paddingStart: '5%' 
   },
-  containerHeader: {
-    marginTop: '15%',
-    marginBottom: '8%',
-    paddingStart: '5%',
-  },
-  message: {
-    fontSize: 28,
+  message: { 
+    fontSize: 28, 
     color: '#fff',
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   containerForm: {
     backgroundColor: '#fff',
@@ -136,14 +135,14 @@ const styles = StyleSheet.create({
     paddingStart: '5%',
     paddingEnd: '5%',
   },
-  titulo: {
-    fontSize: 20,
-    marginTop: 28,
-    fontWeight: 'bold',
+  titulo: { 
+    fontSize: 20, 
+    marginTop: 28, 
+    fontWeight: 'bold' 
   },
-  inputContainer: {
-    position: 'relative',
-    justifyContent: 'center',
+  inputContainer: { 
+    position: 'relative', 
+    justifyContent: 'center' 
   },
   input: {
     borderBottomWidth: 1,
@@ -153,10 +152,8 @@ const styles = StyleSheet.create({
     marginTop: 5,
     paddingRight: 40,
   },
-  iconContainer: {
-    position: 'absolute',
-    right: 10,
-    top: 10,
+  iconContainer: { 
+    position: 'absolute', right: 10, top: 10 
   },
   button: {
     backgroundColor: '#8fbc8f',
@@ -167,10 +164,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  textButton: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
+  textButton: { 
+    color: '#fff', 
+    fontSize: 18, 
+    fontWeight: 'bold' 
   },
   buttonGoogle: {
     flexDirection: 'row',
@@ -184,45 +181,41 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginTop: 20,
     width: '100%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
     elevation: 2,
   },
-  iconGoogle: {
-    width: 20,
-    height: 20,
-    marginRight: 10,
-    resizeMode: 'contain',
+  iconGoogle: { 
+    width: 20, 
+    height: 20, 
+    marginRight: 10, 
+    resizeMode: 'contain' 
   },
-  textButtonGoogle: {
-    fontSize: 16,
+  textButtonGoogle: { 
+    fontSize: 16, 
     fontWeight: 'bold',
-    color: '#000',
+     color: '#000' 
+    },
+  footerContainer: { 
+    marginTop: 25, 
+    alignItems: 'center', 
+    justifyContent: 'center' 
   },
-  footerContainer: {
-    marginTop: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
+  footerButton: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    marginVertical: 5 
   },
-  footerButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 5,
+  textRegistrar: { 
+    color: '#a1a1A1', 
+    fontSize: 15 
   },
-  textRegistrar: {
-    color: '#a1a1A1',
-    fontSize: 15,
-  },
-  textRegistrarCadastrar: {
+  textRegistrarCadastrar: { 
     color: 'green',
-    marginLeft: 5,
-    fontWeight: 'bold',
+    marginLeft: 5, 
+    fontWeight: 'bold' 
   },
-  textEsqueceuSenha: {
-    color: '#4CAF50',
-    fontSize: 15,
-    fontWeight: 'bold',
+  textEsqueceuSenha: { 
+    color: '#4CAF50', 
+    fontSize: 15, 
+    fontWeight: 'bold' 
   },
 });

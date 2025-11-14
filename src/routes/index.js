@@ -6,7 +6,7 @@ import RelatorioGeral from '../pages/telas/relatorioGeral';
 import Welcome from '../pages/welcome/bemVindo';
 import SingIn from '../pages/singIn/telaLogin';
 import CadastroUsuario from '../pages/singIn/telaCadastro';
-import AuthLoading from '../routes/AuthLoading';  // Importante
+import AuthLoading from '../routes/AuthLoading';
 import ConfigSensor from '../pages/telas/configSensor';
 import TelaEsqueceuSenha from '../pages/singIn/telaEsqueceuSenha';
 
@@ -15,20 +15,17 @@ const Stack = createNativeStackNavigator();
 export default function Routes() {
   return (
     <Stack.Navigator initialRouteName="AuthLoading">
-
-       <Stack.Screen
+      <Stack.Screen
         name="Welcome"
         component={Welcome}
         options={{ headerShown: false }}
       />
-      {/* Tela intermediária para verificar se o usuário está logado */}
+
       <Stack.Screen
         name="AuthLoading"
         component={AuthLoading}
         options={{ headerShown: false }}
       />
-
-     
 
       <Stack.Screen
         name="TelaInicial"
@@ -76,8 +73,6 @@ export default function Routes() {
         options={{ headerShown: false }}
       />
 
-
-    
       <Stack.Screen
         name="ConfigSensor"
         component={ConfigSensor}

@@ -14,11 +14,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { auth } from '../telas/firebaseConfig';
 import { updateProfile } from 'firebase/auth';
 
-
 export default function SignIn() {
   const navigation = useNavigation();
 
-  // Estados
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,7 +24,6 @@ export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Validação e cadastro
   const handleSignUp = async () => {
     if (!email || !password || !confirmPassword || !username) {
       Alert.alert('Atenção', 'Preencha todos os campos!');
@@ -39,10 +36,13 @@ export default function SignIn() {
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
 
-      // Atualiza o nome do usuário no perfil
       await updateProfile(user, {
         displayName: username,
       });
@@ -54,17 +54,21 @@ export default function SignIn() {
     }
   };
 
-
   return (
     <View style={styles.container}>
-      {/* Cabeçalho */}
-      <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>
+      <Animatable.View
+        animation="fadeInLeft"
+        delay={500}
+        style={styles.containerHeader}
+      >
         <Text style={styles.message}>Cadastre-se!</Text>
       </Animatable.View>
 
-      {/* Formulário */}
-      <Animatable.View animation="fadeInUp" delay={500} style={styles.containerForm}>
-
+      <Animatable.View
+        animation="fadeInUp"
+        delay={500}
+        style={styles.containerForm}
+      >
         <Text style={styles.titulo}>Nome de Usuário</Text>
         <TextInput
           placeholder="Digite seu nome"
@@ -93,8 +97,15 @@ export default function SignIn() {
             value={password}
             autoCapitalize="none"
           />
-          <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.iconContainer}>
-            <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={22} color="gray" />
+          <TouchableOpacity
+            onPress={() => setShowPassword(!showPassword)}
+            style={styles.iconContainer}
+          >
+            <Ionicons
+              name={showPassword ? 'eye-off' : 'eye'}
+              size={22}
+              color="gray"
+            />
           </TouchableOpacity>
         </View>
 
@@ -111,14 +122,17 @@ export default function SignIn() {
             onPress={() => setShowConfirmPassword(!showConfirmPassword)}
             style={styles.iconContainer}
           >
-            <Ionicons name={showConfirmPassword ? 'eye-off' : 'eye'} size={22} color="gray" />
+            <Ionicons
+              name={showConfirmPassword ? 'eye-off' : 'eye'}
+              size={22}
+              color="gray"
+            />
           </TouchableOpacity>
         </View>
 
         <TouchableOpacity style={styles.button} onPress={handleSignUp}>
           <Text style={styles.textButton}>Cadastrar</Text>
         </TouchableOpacity>
-
       </Animatable.View>
     </View>
   );
@@ -161,7 +175,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     fontSize: 16,
     marginTop: 5,
-    paddingRight: 40, // Espaço para o ícone
+    paddingRight: 40,
   },
   iconContainer: {
     position: 'absolute',

@@ -36,13 +36,11 @@ export default function PerfilUsuario({ navigation }) {
       setFoto(user.photoURL || null);
     }
 
-    // 🔥 Primeiro, busca o UID do sensor associado ao usuário
     const deviceUIDRef = ref(db, `usuarios/${user.uid}/config/deviceUID`);
     onValue(deviceUIDRef, (snapshot) => {
       if (snapshot.exists()) {
         const deviceUID = snapshot.val();
 
-        // Agora lê os dados do sensor correto
         const sensoresRef = ref(db, `usuarios/${deviceUID}`);
         onValue(sensoresRef, (snap) => {
           const data = snap.val();
@@ -53,7 +51,6 @@ export default function PerfilUsuario({ navigation }) {
             setChuva(data.chuva ?? '--');
             setLuz(data.luz ?? '--');
 
-            // ⚠️ Alerta apenas se o solo estiver SECO (1)
             if (data.umidadeSolo === 1) {
               Alert.alert(
                 '🌵 Solo seco!',
@@ -63,13 +60,10 @@ export default function PerfilUsuario({ navigation }) {
             }
           }
         });
-      } else {
-        console.log('⚠️ Nenhum sensor configurado para este usuário.');
       }
     });
   }, []);
 
-  // === Escolher foto da galeria ===
   async function escolherFoto() {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -82,13 +76,11 @@ export default function PerfilUsuario({ navigation }) {
     }
   }
 
-  // === Salvar alterações ===
   async function salvarAlteracoes() {
     try {
       let fotoUrl = foto;
       const storage = getStorage();
 
-      // Se escolheu nova foto local
       if (foto && foto.startsWith('file://')) {
         const response = await fetch(foto);
         const blob = await response.blob();
@@ -97,30 +89,25 @@ export default function PerfilUsuario({ navigation }) {
         fotoUrl = await getDownloadURL(storageRef);
       }
 
-      // Atualiza perfil no Firebase Auth
       await updateProfile(user, { displayName: nome, photoURL: fotoUrl });
 
-      // Atualiza email (requer login recente)
       if (email && email !== user.email) {
         await updateEmail(user, email);
       }
 
-      // Salva no Realtime Database
       await set(ref(db, `usuarios/${user.uid}/info`), {
         nome,
         email,
         foto: fotoUrl,
       });
 
-      Alert.alert('✅ Sucesso', 'Perfil atualizado com sucesso!');
+      Alert.alert('Sucesso', 'Perfil atualizado com sucesso!');
       setEditando(false);
     } catch (error) {
-      console.log('Erro ao atualizar perfil:', error);
       Alert.alert('Erro', error.message || 'Não foi possível salvar as alterações.');
     }
   }
 
-  // === Logout ===
   function sair() {
     signOut(auth)
       .then(() => {
@@ -131,9 +118,8 @@ export default function PerfilUsuario({ navigation }) {
       });
   }
 
-  // 🧠 Interpretação correta dos sensores:
   const textoSolo = umidadeSolo === 1 ? 'Seco' : 'Úmido';
-  const textoChuva = chuva == 1 ? 'Sem chuva ' : ' Chovendo';
+  const textoChuva = chuva == 1 ? 'Sem chuva' : 'Chovendo';
   const textoLuz = luz === 1 ? 'Claro' : 'Escuro';
 
   return (
@@ -201,7 +187,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 40,
   },
-  container: { alignItems: 'center', width: '90%' },
+  container: { 
+    alignItems: 'center',
+    width: '90%' 
+    },
   imagem: {
     width: 180,
     height: 180,
@@ -210,8 +199,16 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: 'green',
   },
-  titulo: { color: '#fff', fontSize: 26, fontWeight: 'bold' },
-  subtitulo: { color: 'green', fontSize: 16, marginBottom: 20 },
+  titulo: { 
+    color: '#fff', 
+    fontSize: 26, 
+    fontWeight: 'bold' 
+  },
+  subtitulo: { 
+    color: 'green', 
+    fontSize: 16, 
+    marginBottom: 20 
+  },
   input: {
     width: '100%',
     backgroundColor: '#1c1c1c',
@@ -227,7 +224,11 @@ const styles = StyleSheet.create({
     width: '100%',
     marginVertical: 15,
   },
-  sensor: { color: 'white', fontSize: 18, marginBottom: 8 },
+  sensor: { 
+    color: 'white', 
+    fontSize: 18, 
+    marginBottom: 8 
+  },
   button: {
     backgroundColor: 'green',
     width: '80%',
@@ -244,5 +245,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
   },
-  textButton: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
+  textButton: { 
+    color: '#fff', 
+    fontSize: 16, 
+    fontWeight: 'bold' 
+  },
 });

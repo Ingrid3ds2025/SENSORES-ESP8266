@@ -12,12 +12,12 @@ export default function AuthLoading({ navigation }) {
       if (user) {
         navigation.replace('TelaInicial');
       } else {
-        navigation.replace('Welcome');  // ou SignIn, se preferir
+        navigation.replace('Welcome');
       }
-      setLoading(false); // só pra garantir que acabou o loading
+      setLoading(false);
     });
 
-    return unsubscribe; // cleanup
+    return unsubscribe;
   }, []);
 
   if (loading) {
@@ -28,7 +28,7 @@ export default function AuthLoading({ navigation }) {
     );
   }
 
-  return null; // não renderiza nada se já navegou
+  return null;
 }
 
 const styles = StyleSheet.create({

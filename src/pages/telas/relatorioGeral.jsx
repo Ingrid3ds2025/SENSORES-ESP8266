@@ -31,7 +31,6 @@ export default function RelatorioGeral() {
 
   const [telaAtual, setTelaAtual] = useState(0);
 
-  // 🔁 Alterna telas automaticamente
   useEffect(() => {
     const intervalo = setInterval(() => {
       setTelaAtual((prev) => (prev + 1) % 3);
@@ -39,11 +38,10 @@ export default function RelatorioGeral() {
     return () => clearInterval(intervalo);
   }, []);
 
-  // 🔥 Firebase listener
   useEffect(() => {
     const auth = getAuth();
     const user = auth.currentUser;
-    if (!user) return alert('Você precisa estar logado.');
+    if (!user) return;
 
     const deviceRef = ref(db, `usuarios/${user.uid}/config/deviceUID`);
     onValue(deviceRef, (snap) => {
@@ -72,13 +70,10 @@ export default function RelatorioGeral() {
             }));
           }
         });
-      } else {
-        alert('Nenhum sensor vinculado.');
       }
     });
   }, []);
 
-  // ========= CONFIGURAÇÃO DOS GRÁFICOS =========
   const chartConfig = [
     {
       titulo: '🌡️ Temperatura e 💧 Umidade do Ar',
@@ -151,14 +146,14 @@ export default function RelatorioGeral() {
       legend: {
         labels: {
           color: '#fff',
-          font: { size: 14, family: 'Arial' },
+          font: { size: 14 },
         },
       },
       title: {
         display: true,
         text: chartConfig[telaAtual].titulo,
         color: '#00ff9d',
-        font: { size: 18, family: 'Arial', weight: 'bold' },
+        font: { size: 18, weight: 'bold' },
       },
     },
     scales: {
@@ -180,7 +175,7 @@ export default function RelatorioGeral() {
   return (
     <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent}>
       <View style={styles.container}>
-        <Text style={styles.titulo}>Relatório Geral </Text>
+        <Text style={styles.titulo}>Relatório Geral</Text>
 
         {deviceUID ? (
           <>
@@ -235,9 +230,7 @@ const styles = StyleSheet.create({
     paddingBottom: 50,
   },
   container: {
-    color: '#fff',
     width: '90%',
-    textAlign: 'center',
     paddingTop: 40,
   },
   titulo: {
@@ -259,8 +252,15 @@ const styles = StyleSheet.create({
     padding: 20,
     marginBottom: 25,
   },
-  dado: { color: '#fff', fontSize: 18, marginBottom: 10 },
-  valor: { color: '#00ff9d', fontWeight: 'bold' },
+  dado: { 
+    color: '#fff', 
+    fontSize: 18, 
+    marginBottom: 10 
+  },
+  valor: { 
+    color: '#00ff9d', 
+    fontWeight: 'bold' 
+  },
   grafico: {
     backgroundColor: '#111',
     borderRadius: 15,
@@ -269,7 +269,11 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 25,
   },
-  aviso: { color: '#aaa', marginTop: 20, textAlign: 'center' },
+  aviso: { 
+    color: '#aaa', 
+    marginTop: 20, 
+    textAlign: 'center' 
+  },
   indicador: {
     flexDirection: 'row',
     justifyContent: 'center',

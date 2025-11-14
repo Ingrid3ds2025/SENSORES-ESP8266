@@ -43,13 +43,16 @@ class TelaInicial extends Component {
                 carregando: false,
               });
 
-              // 🔔 Mostra alerta SOMENTE se o solo estiver SECO (1)
               if (data.umidadeSolo === 1) {
                 Alert.alert("🌵 Solo seco detectado!", "Sua planta precisa de água 💧");
               }
-            } else this.setState({ carregando: false });
+            } else {
+              this.setState({ carregando: false });
+            }
           });
-        } else this.setState({ carregando: false });
+        } else {
+          this.setState({ carregando: false });
+        }
       });
     });
   }
@@ -69,14 +72,12 @@ class TelaInicial extends Component {
       );
     }
 
-    // 🟢 Interpretação correta dos sensores
     const soloTexto = umidadeSolo == 1 ? '🌵 Seco' : '💧 Úmido';
     const luzTexto = luz == 1 ? '🌞 Claro' : '🌙 Escuro';
-    const chuvaTexto = chuva == 1 ? '☀️ Sem chuva' : 'Chovendo';
+    const chuvaTexto = chuva == 1 ? '☀️ Sem chuva' : '🌧️ Chovendo';
 
     return (
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-        {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={this.toggleMenu}>
             <Text style={styles.menuIcon}>☰</Text>
@@ -84,7 +85,6 @@ class TelaInicial extends Component {
           <Text style={styles.headerTitle}>Monitor de Plantas 🌿</Text>
         </View>
 
-        {/* Cards */}
         <View style={styles.cardContainer}>
           <View style={styles.card}>
             <Text style={styles.cardTitle}> Temperatura</Text>
@@ -112,16 +112,14 @@ class TelaInicial extends Component {
 
           <View style={styles.card}>
             <Text style={styles.cardTitle}> Chuva</Text>
-            <Text style={[styles.cardValue, { color: chuva == 1 ? '#4FC3F7' : '#FDD835' }]}>
+            <Text style={[styles.cardValue, { color: chuva == 1 ? '#4FC3F7' : '#F44336' }]}>
               {chuvaTexto}
             </Text>
           </View>
         </View>
 
-        {/* Plant Image */}
         <Image source={require('../../../imagens/planta.png')} style={styles.image} />
 
-        {/* Menu lateral */}
         {menuAberto && (
           <View style={[styles.menuOverlay, { width }]}>
             <TouchableOpacity onPress={this.toggleMenu} style={styles.closeButton}>
@@ -146,42 +144,107 @@ class TelaInicial extends Component {
   }
 }
 
-// 🎨 Estilos
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0d0d0d', paddingTop: 40 },
-  contentContainer: { alignItems: 'center' },
-  header: {
-    width: '100%', flexDirection: 'row', alignItems: 'center',
-    justifyContent: 'space-between', paddingHorizontal: 20, marginBottom: 10,
+  container: { 
+    flex: 1, 
+    backgroundColor: '#0d0d0d', 
+    paddingTop: 40
+    
   },
-  menuIcon: { fontSize: 38, color: '#4CAF50' },
-  headerTitle: { color: '#E8F5E9', fontSize: 20, fontWeight: '700' },
+  contentContainer: { 
+    alignItems: 'center' 
+
+  },
+  header: {
+    width: '100%', 
+    flexDirection: 'row', 
+    alignItems: 'center',
+    justifyContent: 'space-between', 
+    paddingHorizontal: 20, 
+    marginBottom: 10,
+  },
+  menuIcon: { 
+    fontSize: 38, 
+    color: '#4CAF50' 
+  },
+  headerTitle: { 
+    color: '#E8F5E9', 
+    fontSize: 20, 
+    fontWeight: '700' },
   cardContainer: {
-    width: '90%', marginTop: 20, flexWrap: 'wrap',
-    flexDirection: 'row', justifyContent: 'space-between',
+    width: '90%', 
+    marginTop: 20, 
+    flexWrap: 'wrap',
+    flexDirection: 'row', 
+    justifyContent: 'space-between',
   },
   card: {
-    backgroundColor: '#1B1B1B', borderRadius: 15, width: '48%',
-    paddingVertical: 18, paddingHorizontal: 10, marginVertical: 8,
-    alignItems: 'center', borderWidth: 1, borderColor: '#2E7D32',
+    backgroundColor: '#1B1B1B', 
+    borderRadius: 15, 
+    width: '48%',
+    paddingVertical: 18, 
+    paddingHorizontal: 10,
+    marginVertical: 8,
+    alignItems: 'center', 
+    borderWidth: 1, 
+    borderColor: '#2E7D32',
   },
-  cardTitle: { color: '#A5D6A7', fontSize: 15, fontWeight: '600' },
-  cardValue: { color: '#FFFFFF', fontSize: 24, fontWeight: 'bold', marginTop: 5 },
-  image: { width: 220, height: 220, marginTop: 20, opacity: 0.9 },
+  cardTitle: {
+     color: '#A5D6A7', 
+     fontSize: 15, 
+     fontWeight: '600'
+     },
+  cardValue: { 
+    color: '#FFFFFF', 
+    fontSize: 24, 
+    fontWeight: 'bold', 
+    marginTop: 5 
+  },
+  image: { 
+    width: 220, 
+    height: 220,
+    marginTop: 20, 
+    opacity: 0.9 
+  },
   menuOverlay: {
-    position: 'absolute', top: 0, bottom: 0, left: 0,
-    backgroundColor: 'rgba(0,0,0,0.96)', zIndex: 100,
-    alignItems: 'center', justifyContent: 'center',
+    position: 'absolute', 
+    top: 0, 
+    bottom: 0, 
+    left: 0,
+    backgroundColor: 'rgba(0,0,0,0.96)', 
+    zIndex: 100,
+    alignItems: 'center', 
+    justifyContent: 'center',
   },
-  closeButton: { position: 'absolute', top: 50, right: 30 },
-  closeIcon: { fontSize: 36, color: '#81C784' },
-  menuItems: { alignItems: 'center', gap: 30 },
-  menuItem: { color: '#FFFFFF', fontSize: 22, fontWeight: '600' },
+  closeButton: { 
+    position: 'absolute',
+    top: 50, 
+    right: 30 
+  },
+  closeIcon: { 
+    fontSize: 36, 
+    color: '#81C784' 
+  },
+  menuItems: { 
+    alignItems: 'center', 
+    gap: 30 
+  },
+  menuItem: { 
+    color: '#FFFFFF', 
+    fontSize: 22, 
+    fontWeight: '600' 
+  },
   loadingContainer: {
-    flex: 1, backgroundColor: '#0d0d0d',
-    justifyContent: 'center', alignItems: 'center',
+    flex: 1, 
+    backgroundColor: '#0d0d0d',
+    justifyContent: 'center', 
+    alignItems: 'center',
   },
-  loadingText: { color: '#E8F5E9', marginTop: 10, fontSize: 16 },
+  loadingText: { 
+    color: '#E8F5E9', 
+    marginTop: 10, 
+    fontSize: 16 
+  },
 });
 
 export default TelaInicial;
